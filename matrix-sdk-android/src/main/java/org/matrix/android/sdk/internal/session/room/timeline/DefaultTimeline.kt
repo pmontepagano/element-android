@@ -54,6 +54,7 @@ import io.realm.Sort
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.matrix.android.sdk.internal.database.RealmSessionProvider
 import timber.log.Timber
 import java.util.Collections
 import java.util.UUID
@@ -76,7 +77,8 @@ internal class DefaultTimeline(
         private val settings: TimelineSettings,
         private val hiddenReadReceipts: TimelineHiddenReadReceipts,
         private val eventBus: EventBus,
-        private val eventDecryptor: TimelineEventDecryptor
+        private val eventDecryptor: TimelineEventDecryptor,
+        private val realmSessionProvider: RealmSessionProvider
 ) : Timeline, TimelineHiddenReadReceipts.Delegate {
 
     data class OnNewTimelineEvents(val roomId: String, val eventIds: List<String>)
@@ -135,13 +137,13 @@ internal class DefaultTimeline(
     }
 
     override fun pendingEventCount(): Int {
-        return Realm.getInstance(realmConfiguration).use {
+        return realmSessionProvider.withRealm {
             RoomEntity.where(it, roomId).findFirst()?.sendingTimelineEvents?.count() ?: 0
         }
     }
 
     override fun failedToDeliverEventCount(): Int {
-        return Realm.getInstance(realmConfiguration).use {
+        return realmSessionProvider.withRealm {
             TimelineEventEntity.findAllInRoomWithSendStates(it, roomId, SendState.HAS_FAILED_STATES).count()
         }
     }
@@ -238,7 +240,7 @@ internal class DefaultTimeline(
             return eventId
         }
         // Otherwise, we should check if the event is in the db, but is hidden because of filters
-        return Realm.getInstance(realmConfiguration).use { localRealm ->
+        return realmSessionProvider.withRealm  { localRealm ->
             val nonFilteredEvents = buildEventQuery(localRealm)
                     .sort(TimelineEventEntityFields.DISPLAY_INDEX, Sort.DESCENDING)
                     .findAll()

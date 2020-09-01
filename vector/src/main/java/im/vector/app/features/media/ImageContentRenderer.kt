@@ -36,9 +36,9 @@ import im.vector.app.core.glide.GlideRequest
 import im.vector.app.core.ui.model.Size
 import im.vector.app.core.utils.DimensionConverter
 import im.vector.app.core.utils.isLocalFile
+import kotlinx.android.parcel.Parcelize
 import org.matrix.android.sdk.api.session.content.ContentUrlResolver
 import org.matrix.android.sdk.internal.crypto.attachments.ElementToDecrypt
-import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -65,11 +65,9 @@ class ImageContentRenderer @Inject constructor(private val activeSessionHolder: 
             val height: Int?,
             val maxHeight: Int,
             val width: Int?,
-            val maxWidth: Int
-    ) : AttachmentData {
-
-        fun isLocalFile() = url.isLocalFile()
-    }
+            val maxWidth: Int,
+            val isLocalFile: Boolean = url.isLocalFile()
+    ) : AttachmentData
 
     enum class Mode {
         FULL_SIZE,
