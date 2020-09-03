@@ -21,6 +21,8 @@ Bugfix 🐛:
  - Can't handle ongoing call events in background (#1992)
  - Crash / Attachment viewer: Cannot draw a recycled Bitmap #2034
  - Login with Matrix-Id | Autodiscovery fails if identity server is invalid and Homeserver ok (#2027)
+ - JSON for verification events leaks in to the room list (#1246)
+ - Replies to poll appears in timeline as unsupported events during sending #1004
 
 Translations 🗣:
  -
