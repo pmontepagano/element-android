@@ -24,6 +24,7 @@ Bugfix 🐛:
  - Can't handle ongoing call events in background (#1992)
  - Crash / Attachment viewer: Cannot draw a recycled Bitmap #2034
  - Login with Matrix-Id | Autodiscovery fails if identity server is invalid and Homeserver ok (#2027)
+ - Android 6: App crash when read Contact permission is granted (#2064)
 
 Translations 🗣:
  -
